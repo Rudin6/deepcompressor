@@ -144,6 +144,7 @@ def ptq(  # noqa: C901
         gc.collect()
         torch.cuda.empty_cache()
     # endregion
+    
     # region collect original state dict
     if config.needs_acts_quantizer_cache:
         if load_path and os.path.exists(load_path.acts):
@@ -157,6 +158,8 @@ def ptq(  # noqa: C901
     else:
         orig_state_dict = None
     # endregion
+
+    # quantize weights
     if load_model:
         logger.info(f"* Loading model checkpoint from {load_model_path}")
         load_diffusion_weights_state_dict(
@@ -228,6 +231,8 @@ def ptq(  # noqa: C901
         tools.logging.Formatter.indent_dec()
         gc.collect()
         torch.cuda.empty_cache()
+    
+    # quantize activations
     if quant_acts:
         logger.info("  * Quantizing activations")
         tools.logging.Formatter.indent_inc()
